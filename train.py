@@ -571,9 +571,9 @@ def parse_opt(known=False):
     root 是根目录
     """
 
-    #初始预训练权重
+    # 初始预训练权重
     parser.add_argument("--weights", type=str, default=ROOT / "yolov5s.pt", help="initial weights path")
-    #添加模型配置文件
+    # 添加模型配置文件
     model_path = r"/root/wjj/yolov5/models/yolov5s.yaml"
     """
     模型配置文件，此处的default是要修改为自己配置的文件
@@ -593,19 +593,19 @@ def parse_opt(known=False):
     此时cfg是小的权重，因为取交集的原因会权重迁移。从大模型中学习小模型。
     """
     parser.add_argument("--cfg", type=str, default=model_path, help="model.yaml path")
-    #⭐配置训练数据源
+    # ⭐配置训练数据源
     parser.add_argument("--data", type=str, default=ROOT / "data/coco128.yaml", help="dataset.yaml path")
-    #⭐训练集参数文件地址，之前学习的超参数都在这里
+    # ⭐训练集参数文件地址，之前学习的超参数都在这里
     parser.add_argument("--hyp", type=str, default=ROOT / "data/hyps/hyp.scratch-low.yaml", help="hyperparameters path")
-    #⭐训练epochs次数epochs = 100，300
+    # ⭐训练epochs次数epochs = 100，300
     parser.add_argument("--epochs", type=int, default=1, help="total training epochs")
-    #⭐batch 8 ,16,32,64
+    # ⭐batch 8 ,16,32,64
     parser.add_argument("--batch-size", type=int, default=1, help="total batch size for all GPUs, -1 for autobatch")
-    #⭐训练的输入尺寸640，输出头20，40，80。取决于图大小一般最大也是1280
+    # ⭐训练的输入尺寸640，输出头20，40，80。取决于图大小一般最大也是1280
     parser.add_argument("--imgsz", "--img", "--img-size", type=int, default=640, help="train, val image size (pixels)")
-    #矩形训练，不常用
+    # 矩形训练，不常用
     parser.add_argument("--rect", action="store_true", help="rectangular training")
-    '''
+    """
     ⭐是否在 上一轮的基础上继续训练
         1.如果训练到一般停止了想要接着训练则需要将默认参数修改且将上述的weights权重也修改，默认路径修改为为暂停时的权重路径
         default=True 
@@ -615,12 +615,12 @@ def parse_opt(known=False):
         修改该文件下面两个其中一个，可以试试
         /root/wjj/yolov5/runs/train/exp3/opt.yaml
         /root/wjj/yolov5/runs/train/exp3/hyp.yaml
-    '''
+    """
     parser.add_argument("--resume", nargs="?", const=True, default=False, help="resume most recent training")
     parser.add_argument("--nosave", action="store_true", help="only save final checkpoint")
     # 训练后有验证则关闭验证
     parser.add_argument("--noval", action="store_true", help="only validate final epoch")
-    #不进行自动聚类anchor
+    # 不进行自动聚类anchor
     parser.add_argument("--noautoanchor", action="store_true", help="disable AutoAnchor")
     parser.add_argument("--noplots", action="store_true", help="save no plot files")
     parser.add_argument("--evolve", type=int, nargs="?", const=300, help="evolve hyperparameters for x generations")
@@ -636,7 +636,7 @@ def parse_opt(known=False):
     一般都是true
     """
     parser.add_argument("--image-weights", action="store_true", help="use weighted image selection for training")
-    #代表多块显卡0，1，2代表三块显卡
+    # 代表多块显卡0，1，2代表三块显卡
     parser.add_argument("--device", default="", help="cuda device, i.e. 0 or 0,1,2,3 or cpu")
     """
     ⭐是否开启多尺度训练
@@ -646,11 +646,11 @@ def parse_opt(known=False):
     0.5 ，1 ，1.5
     """
     parser.add_argument("--multi-scale", action="store_true", help="vary img-size +/- 50%%")
-    #单类训练
+    # 单类训练
     parser.add_argument("--single-cls", action="store_true", help="train multi-class data as single-class")
-    #优化器选择
+    # 优化器选择
     parser.add_argument("--optimizer", type=str, choices=["SGD", "Adam", "AdamW"], default="SGD", help="optimizer")
-    #多卡训练才开启
+    # 多卡训练才开启
     parser.add_argument("--sync-bn", action="store_true", help="use SyncBatchNorm, only available in DDP mode")
     """
     ⭐多进程读数据，需要开启4-8之间
@@ -660,9 +660,9 @@ def parse_opt(known=False):
     parser.add_argument("--name", default="exp", help="save to project/name")
     parser.add_argument("--exist-ok", action="store_true", help="existing project/name ok, do not increment")
     parser.add_argument("--quad", action="store_true", help="quad dataloader")
-    #是都开启余弦退火
+    # 是都开启余弦退火
     parser.add_argument("--cos-lr", action="store_true", help="cosine LR scheduler")
-    #标签平滑，防止过拟合，降低gt的标准（给标签一个怀疑尺度）
+    # 标签平滑，防止过拟合，降低gt的标准（给标签一个怀疑尺度）
     parser.add_argument("--label-smoothing", type=float, default=0.0, help="Label smoothing epsilon")
     """
     ⭐早停轮次，val毫无进展就早停，可修改参数

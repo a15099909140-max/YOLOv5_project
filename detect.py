@@ -366,8 +366,7 @@ def parse_opt():
     """
     parser = argparse.ArgumentParser()
 
-    #自己加的
-    path_best_pt = r"/root/wjj/yolov5/runs/train/exp3/weights/best.pt"
+    # 自己加的
     """
     ⭐detect.py中将自己加的训练权重赋值上去即可
     parser.add_argument("--weights", nargs="+", type=str, default = path_best_pt, help="model path or triton URL")
@@ -383,13 +382,13 @@ def parse_opt():
     ⭐推理尺寸：可以不等于训练尺寸
     """
     parser.add_argument("--imgsz", "--img", "--img-size", nargs="+", type=int, default=[640], help="inference size h,w")
-    #置信度
+    # 置信度
     parser.add_argument("--conf-thres", type=float, default=0.25, help="confidence threshold")
-    #nms去重置信度
+    # nms去重置信度
     parser.add_argument("--iou-thres", type=float, default=0.45, help="NMS IoU threshold")
-    #最多一张图有1000个目标
+    # 最多一张图有1000个目标
     parser.add_argument("--max-det", type=int, default=1000, help="maximum detections per image")
-    #设备
+    # 设备
     parser.add_argument("--device", default="", help="cuda device, i.e. 0 or 0,1,2,3 or cpu")
     parser.add_argument("--view-img", action="store_true", help="show results")
     """
@@ -409,7 +408,7 @@ def parse_opt():
         help="whether to save boxes coordinates in YOLO format or Pascal-VOC format when save-txt is True, 0 for YOLO and 1 for Pascal-VOC",
     )
     parser.add_argument("--save-csv", action="store_true", help="save results in CSV format")
-    #是否将预测框box截图截下来
+    # 是否将预测框box截图截下来
     parser.add_argument("--save-conf", action="store_true", help="save confidences in --save-txt labels")
     parser.add_argument("--save-crop", action="store_true", help="save cropped prediction boxes")
     parser.add_argument("--nosave", action="store_true", help="do not save images/videos")
