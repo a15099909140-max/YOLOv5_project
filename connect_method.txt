@@ -1,0 +1,96 @@
+===============================================
+一、前期准备（必做，缺一不可）
+收集远程服务器信息，记录如下：
+主机地址（SFTP/SSH）：connect.nmb1.seetacloud.com
+端口号：45516
+登录用户名：root
+登录密码：[你的服务器密码，自行替换]
+本地环境准备：
+安装 PyCharm 专业版（社区版无完整远程开发功能，务必确认版本）
+本地保存 YOLOv5 项目源码（无需安装 PyTorch/CUDA，仅用于编辑代码）
+远程服务器前置确认（服务商已配置，无需自己操作）：
+已安装 CUDA、PyTorch（GPU 版）、OpenCV 等深度学习依赖
+已创建项目目录：/root/wjj/yolov5
+二、步骤 1：配置 PyCharm 与远程服务器的 SSH/SFTP 连接（全局级）
+打开 PyCharm，点击顶部菜单栏「File」→「Settings」（Windows）/「PyCharm」→「Preferences」（Mac）
+在左侧导航栏中，展开「Build, Execution, Deployment」，点击「Deployment」
+点击窗口左上角「+」号（添加新连接），选择「SFTP」，输入连接名称（如 Seetacloud_New），点击「OK」
+切换到「Connection」标签页，填写以下信息：
+SFTP host：粘贴远程主机地址（connect.nmb1.seetacloud.com）
+Port：输入端口号（45516）
+User name：输入登录用户名（root）
+Password：输入登录密码（[你的服务器密码]）
+点击「Test Connection」测试连接，弹出「Successfully connected to ...」提示即为成功，点击「OK」关闭测试窗口
+若弹出「This SSH configuration is project-level...」提示，点击「Move this SSH configuration to IDE settings」，将配置迁移到全局（避免后续项目权限问题）
+暂不关闭 Settings 窗口，直接进行下一步（路径映射配置）
+三、步骤 2：配置本地与远程路径映射（实现文件关联）
+在上述「Deployment」配置窗口，切换到「Mappings」标签页
+配置「Local Path」（本地项目目录）：
+点击右侧文件夹图标（📁）
+选择本地 YOLOv5 项目的根目录（如 C:/Users/Excub/workspace/YOLOv5）
+点击「OK」确认
+配置「Deployment Path (on server)」（远程项目目录）：
+直接输入：/root/wjj/yolov5（与远程服务器已创建的目录完全一致，必须以 / 开头）
+其他配置保持默认，暂不关闭 Settings 窗口，直接进行下一步（自动同步配置）
+四、步骤 3：配置自动文件同步（本地修改→远程自动更新）
+在上述「Deployment」配置窗口，切换到「Options」标签页（若未显示，展开窗口右侧「Advanced」箭头）
+勾选以下核心选项（必勾）：
+Upload changed files automatically to the default server（自动上传修改的文件到默认服务器）
+勾选以下可选选项（推荐）：
+Delete remote files when local files are deleted（本地删除文件时同步删除远程文件）
+点击窗口底部「Apply」（应用配置），再点击「OK」（保存并关闭 Settings 窗口）
+手动同步补充操作（备用）：
+若本地修改文件后未自动同步，会弹出「The file has been modified. Upload?」提示
+直接点击「Upload」，即可手动上传当前修改的文件到远程服务器
+五、步骤 4：配置远程 Python 解释器（调用远程 GPU 环境）
+点击顶部菜单栏「File」→「Settings」→「Project: 你的项目名」→「Python Interpreter」
+点击窗口右上角齿轮图标（⚙️），选择「Add」（添加新解释器）
+在弹出的左侧导航栏中，选择「SSH Interpreter」，勾选「Existing server configuration」
+从下拉框中选择已配置好的「Seetacloud_New」连接，点击「Next」
+等待 PyCharm 显示「Introspecting SSH server」（探测远程服务器环境，耐心等待 5-10 秒，勿进行任何操作）
+探测完成后，在左侧导航栏中选择「System Interpreter」（系统解释器，使用服务器已配置好的 GPU 环境，无需新建虚拟环境）
+确认右侧「Base interpreter」路径（自动显示，如 /root/miniconda3/bin/python3，该路径已包含 PyTorch/CUDA，直接使用）
+确认「Sync folders」配置（与步骤 2 路径映射一致）：
+Local path：本地 YOLOv5 项目根目录
+Remote path：/root/wjj/yolov5
+若路径不符，点击文件夹图标（📁）修改，确保一致
+点击窗口右下角「Create」（创建远程解释器）
+等待 PyCharm 显示「Loading...」（加载远程环境依赖包，耐心等待 1-2 分钟，勿关闭窗口）
+加载完成后，返回「Python Interpreter」窗口，可看到已选中远程解释器，点击「Apply」→「OK」，完成远程解释器配置
+六、步骤 5：运行远程代码（PyCharm 内直接操作，推荐）
+查看远程项目目录：PyCharm 右侧会显示「Remote Host」窗口，展开后可看到「/root/wjj/yolov5」及所有项目文件
+提前上传权重文件（跳过自动下载，大幅提速）：
+找到本地已有的「yolov5s.pt」权重文件
+直接拖拽该文件到「Remote Host」窗口的「/root/wjj/yolov5」目录下，PyCharm 会自动上传到远程服务器
+运行 YOLOv5 检测脚本：
+在「Remote Host」窗口中，找到「detect.py」文件
+右键点击「detect.py」，选择「Run 'detect'」
+PyCharm 会自动调用远程 GPU 环境运行代码，无需手动输入命令
+七、步骤 6：查看运行结果（本地直接查看，无需登录终端）
+查看运行日志：
+PyCharm 底部会弹出「Run」窗口，直接显示远程服务器的运行日志
+可查看 GPU 信息（如 CUDA:0 (NVIDIA GeForce RTX 4090)）、检测耗时、结果保存路径等
+查看检测结果图片：
+在「Remote Host」窗口中，展开「/root/wjj/yolov5/runs/detect/exp」目录
+双击该目录下的任意图片文件（如 bus.jpg），PyCharm 会自动下载并在本地显示检测结果
+八、备用方案：Xshell 配合运行（终端方式）
+打开 Xshell，输入以下信息登录服务器：
+主机：connect.nmb1.seetacloud.com
+端口：45516
+用户名：root
+密码：[你的服务器密码]
+进入远程项目目录，执行命令：
+cd /root/wjj/yolov5
+运行检测脚本（指定已上传的权重，跳过下载），执行命令：
+python detect.py --weights yolov5s.pt
+下载结果图片（使用 Xftp）：
+打开 Xftp，连接同一台远程服务器
+找到「/root/wjj/yolov5/runs/detect/exp」目录
+拖拽目录下的图片文件到本地文件夹，即可查看结果
+九、关键注意事项（必看，避免踩坑）
+路径格式：远程路径必须以「/」开头（如 /root/wjj/yolov5），不可少写斜杠，否则会出现路径错误
+运行慢问题：初期「慢」是环境加载 / 权重下载，并非 GPU 运行慢；提前上传本地权重可解决该问题，实际检测由 RTX 4090 加速，速度远超本地
+同步失效：若自动同步失效，右键点击对应文件→「Deployment」→「Upload to Seetacloud_New」，强制上传
+解释器加载失败：重新测试 SSH 连接，确认服务器 Python 环境正常，且 PyTorch、OpenCV 等依赖已安装完整
+权重路径：若将权重放在「/root/wjj/yolov5/weights」子目录，运行命令需改为「python detect.py --weights weights/yolov5s.pt」
+===============================================
